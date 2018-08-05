@@ -3,7 +3,7 @@
 
 import random
 import numpy as np
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageFont
 
 
 SIZE=250
@@ -55,12 +55,15 @@ LEVEL=1
 NEW_SIZE = SIZE + SIZE * LEVEL * 2
 extend_image = Image.new('RGB', (NEW_SIZE, NEW_SIZE))
 
-print True if extend_image.mode == image.mode else False
+fnt = ImageFont.load_default()
 
 number=1
 for x in range(NEW_SIZE/SIZE):
 	for y in range(NEW_SIZE/SIZE):
-		extend_image.paste(image, box=(y * SIZE, x * SIZE, (y + 1) * SIZE, (x + 1) * SIZE))
-		#extend_image.paste(image, (y * SIZE, x * SIZE))
+		tmp_image = image.copy()
+		tmp_draw = ImageDraw.Draw(tmp_image)
+		tmp_draw.text((SIZE/2,SIZE/2), str(number), font=fnt)
+		extend_image.paste(tmp_image, box=(y * SIZE, x * SIZE, (y + 1) * SIZE, (x + 1) * SIZE))
+		number += 1
 
 extend_image.save("extend.jpg", "jpeg")
